@@ -12,7 +12,11 @@ class TasksController < ApplicationController
   end
 
   def show
+    if logged_in?
     @task = Task.find(params[:id])
+    else
+    redirect_to login_url
+    end
   end
   
   def new
