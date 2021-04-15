@@ -1,11 +1,29 @@
-<h1>タスク一覧</h1>
+<% if logged_in? %>
+  <h1>タスク一覧</h1>
+  <p>ログイン完了ユーザ: <%= current_user.name %></p>
+  
+  <ul>
+    <% @tasks.each do |task| %>
+      <li><%= link_to task.id, task %> : <%=task.content %>&gt; <%= task.status %></li>
+    <% end %>
+  </ul>
+  
+  <%= link_to '新規タスクの投稿', new_task_path %></br>
+  <%= link_to 'Logout', logout_path, method: :delete %>
+  
+<% else %>
+  <h1>Welcome to the TASKLISTS</h1>
+  <h2>Log in</h2>
+  <%= form_with(url: login_path, scope: :session, local: true) do |f| %>
+    <%= f.label :email, 'Email' %>
+    <%= f.email_field :email %></br>
 
-<ul>
-  <% @tasks.each do |task| %>
-    <li><%= link_to task.id, task %> : <%=task.content %>&gt; <%= task.status %></li>
+    <%= f.label :password, 'Password' %>
+    <%= f.password_field :password %></br>
+
+    <%= f.submit 'Log in' %>
   <% end %>
-</ul>
 
-<%= link_to '新規タスクの投稿', new_task_path %>
+  <p>New user? <%= link_to 'Sign up now!', signup_path %></p>
 
-</ul>
+<% end %>
