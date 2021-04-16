@@ -1,22 +1,14 @@
 class TasksController < ApplicationController
-  before_action :require_user_logged_in, only: [:show, :new, :destroy]
-  before_action :correct_user, only: [:destroy]
+  before_action :require_user_logged_in
+  before_action :correct_user, only: [:show, :edit, :destroy]
 
   def index
-    if logged_in?
       @task = current_user.tasks.build
       @tasks = current_user.tasks.order(id: :desc).page(params[:page])
-    else
-      redirect_to login_url
-    end
   end
 
   def show
-    if logged_in?
     @task = Task.find(params[:id])
-    else
-    redirect_to login_url
-    end
   end
   
   def new
@@ -70,13 +62,4 @@ class TasksController < ApplicationController
       redirect_to root_url
     end
   end
-  
-  def current_user
-    @current_user ||= User.find_by(id: session[:user_id])
-  end
-
-  def logged_in?
-    !!current_user
-  end
-
 end
